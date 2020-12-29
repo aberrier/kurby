@@ -1,6 +1,13 @@
 # Kurby
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://docs.python.org/3/whatsnew/3.9html)
 
+
+<div align="center">
+    <img src="docs/res/kurby.png" alt="Kirby ball in Kirby: Canvas Curse" height=400/>
+</div>
+<br>
+
+
 Kurby is a nice and simple CLI that use [Twist](https://twist.moe) website and their huge collection to download animes for free and **automatically**
 
 Animes from Twist are generally in High Definition with English subtitles
@@ -26,7 +33,8 @@ The CLI is built with [Typer](https://github.com/tiangolo/typer) and it is compo
 
 > Because sometimes bad things can happen, Kurby will automatically retry for you
 
-###And that's it !
+#### And that's it !
+
 You can also use `python kurby.py --help` to get more information on the different commands
 
 ## Installation
@@ -47,7 +55,7 @@ poetry install
 ## Getting the latest episode automatically
 An interesting use case is to get the latest episode of an anime as soon as it is available.
 
-This is possible on Linux using `crontab` (or another equivalent on others OS) and _a bit of chemistry_.
+This is possible on Linux using `crontab` (or another equivalent on others OS) and _a little tweak of chemistry_.
 Here is an example of a few instructions that can help you do this.
 ```shell
 now=$(date -u "+%Y-%m-%dT%H:%M:%S")
