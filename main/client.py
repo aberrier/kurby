@@ -10,7 +10,7 @@ fake = Faker()
 
 
 def get_auth_client() -> httpx.Client:
-    headers = CHROME_HEADERS | {"user-agent": fake.chrome()}
+    headers = {**CHROME_HEADERS, "user-agent": fake.chrome()}
     r = httpx.get(url=TWIST_URL, headers=headers)
     r.raise_for_status()
     match = re.search(r"<script>(.*)<\/script>", r.content.decode("utf-8"))
@@ -34,7 +34,7 @@ def get_auth_client() -> httpx.Client:
     match = re.search(r'"x-access-token":"([\w]+)"', content)
     access_token = match.group(1)
     c = httpx.Client(
-        headers=headers | {"x-access-token": access_token}, cookies=cookies
+        headers={**headers, "x-access-token": access_token}, cookies=cookies
     )
     # Extra parameters
     match = re.search(r',k:"(.+)",mount', content)

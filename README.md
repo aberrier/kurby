@@ -1,5 +1,5 @@
 # Kurby
-[![PyPI - Python Version](https://img.shields.io/badge/python-3.9-blue.svg)](https://docs.python.org/3/whatsnew/3.9html)
+[![PyPI - Python Version](https://img.shields.io/badge/python-3.7-blue.svg)](https://docs.python.org/3/whatsnew/3.7.html)
 
 
 <div align="center">
@@ -40,7 +40,7 @@ You can also use `python kurby.py --help` to get more information on the differe
 ## Installation
 ### Create your virtual environment
 ````bash
-mkvirtualenv kurby -p=python3.9
+mkvirtualenv kurby -p=python3.7
 workon kurby
 ````
 ### Install poetry
