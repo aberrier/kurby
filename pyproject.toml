@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "twist.moe"
+name = "poetry"
 version = "0.0.1"
 description = ""
 authors = ["Alain BERRIER <alain.berrier@seelk.co>"]
