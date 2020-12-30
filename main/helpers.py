@@ -84,14 +84,12 @@ def filter_animes(
     )
     selected_animes_with_score_by_id = {}
     for anime in animes_by_title.values():
-        if (
-            score := fuzz.token_set_ratio(search.lower(), anime.title.lower())
-        ) > threshold:
+        score = fuzz.token_set_ratio(search.lower(), anime.title.lower())
+        if score > threshold:
             selected_animes_with_score_by_id[anime.id] = (score, anime)
     for anime in animes_by_alt_title.values():
-        if (
-            score := fuzz.token_set_ratio(search.lower(), anime.alt_title.lower())
-        ) > threshold:
+        score = fuzz.token_set_ratio(search.lower(), anime.alt_title.lower())
+        if score > threshold:
             selected_animes_with_score_by_id[anime.id] = (score, anime)
     return list(
         x[1]
@@ -116,7 +114,7 @@ def download_source(source: AnimeSource, filepath: Path):
         with new_client.stream(
             "GET",
             source.source,
-            headers=dict(new_client.headers) | {"referer": TWIST_URL},
+            headers={**dict(new_client.headers), "referer": TWIST_URL},
         ) as response:
             total = int(response.headers.get("Content-Length"))
             with filepath.open("wb") as file:

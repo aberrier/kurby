@@ -5,7 +5,7 @@ description = ""
 authors = ["Alain BERRIER <alain.berrier@seelk.co>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 typer = "0.3.2"
 typer-cli = "0.0.11"
 httpx = "0.16.1"
@@ -13,7 +13,7 @@ Faker = "5.0.2"
 Js2Py = "0.70"
 pydantic = "1.7.3"
 fuzzywuzzy = "0.18.0"
-numpy = "1.19.4"
+numpy = "1.18.5"
 tqdm = "4.55.0"
 tenacity = "6.3.1"
 arrow = "0.17.0"
