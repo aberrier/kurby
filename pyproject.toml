@@ -18,6 +18,10 @@ tqdm = "4.55.0"
 tenacity = "6.3.1"
 arrow = "0.17.0"
 
+[tool.poetry.dev-dependencies]
+IPython="*"
+coverage="*"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

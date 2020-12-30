@@ -10,7 +10,7 @@
 
 Kurby is a nice and simple CLI that use [Twist](https://twist.moe) website and their huge collection to download animes for free and **automatically**
 
-Animes from Twist are generally in High Definition with English subtitles
+Animes from Twist are generally in High Definition with English subtitles. Please consider [donating](https://twist.moe) for their amazing work :)
 
 ## Overview
 The CLI is built with [Typer](https://github.com/tiangolo/typer) and it is composed of 3 commands
@@ -49,7 +49,7 @@ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poet
 ```
 ### Install dependencies using poetry
 ```bash
-poetry install
+poetry install --no-dev
 ```
 
 ## Getting the latest episode automatically

@@ -11,23 +11,10 @@ var.registers(['crypto_js', '_typeof', 'getFromGlobals'])
 def PyJsHoisted_getFromGlobals_(name, this, arguments, var=var):
     var = Scope({'name':name, 'this':this, 'arguments':arguments}, var)
     var.registers(['name'])
-    if var.get('Object').get('prototype').callprop('hasOwnProperty', Js('_fake_exports')).neg():
-        PyJsTempException = JsToPyException(var.get('Error')((Js('Could not find any value named ')+var.get('name'))))
-        raise PyJsTempException
-    if var.get('Object').get('prototype').get('_fake_exports').callprop('hasOwnProperty', var.get('name')):
-        return var.get('Object').get('prototype').get('_fake_exports').get(var.get('name'))
-    else:
-        PyJsTempException = JsToPyException(var.get('Error')((Js('Could not find any value named ')+var.get('name'))))
-        raise PyJsTempException
+    return var.get('Object').get('prototype').get('_fake_exports').get(var.get('name'))
 PyJsHoisted_getFromGlobals_.func_name = 'getFromGlobals'
 var.put('getFromGlobals', PyJsHoisted_getFromGlobals_)
 Js('use strict')
-@Js
-def PyJs_anonymous_0_(obj, this, arguments, var=var):
-    var = Scope({'obj':obj, 'this':this, 'arguments':arguments}, var)
-    var.registers(['obj'])
-    return var.get('obj',throw=False).typeof()
-PyJs_anonymous_0_._set_name('anonymous')
 @Js
 def PyJs_anonymous_1_(obj, this, arguments, var=var):
     var = Scope({'obj':obj, 'this':this, 'arguments':arguments}, var)
@@ -76,116 +63,11 @@ def PyJs_LONG_2686_(var=var):
         PyJs_define_4_._set_name('define')
         var.get('api').put('define', PyJs_define_4_)
         pass
-        @Js
-        def PyJs_createNamed_5_(Base, this, arguments, var=var):
-            var = Scope({'Base':Base, 'this':this, 'arguments':arguments, 'createNamed':PyJs_createNamed_5_}, var)
-            var.registers(['name', 'Base', 'Generated'])
-            @Js
-            def PyJsHoisted_Generated_(entity, this, arguments, var=var):
-                var = Scope({'entity':entity, 'this':this, 'arguments':arguments}, var)
-                var.registers(['entity'])
-                var.get(u"this").callprop('_initNamed', var.get('entity'), var.get('name'))
-            PyJsHoisted_Generated_.func_name = 'Generated'
-            var.put('Generated', PyJsHoisted_Generated_)
-            var.put('name', var.get(u"this").get('name'))
-            pass
-            var.get('inherits')(var.get('Generated'), var.get('Base'))
-            @Js
-            def PyJs__initNamed_6_(entity, name, this, arguments, var=var):
-                var = Scope({'entity':entity, 'name':name, 'this':this, 'arguments':arguments, '_initNamed':PyJs__initNamed_6_}, var)
-                var.registers(['name', 'entity'])
-                var.get('Base').callprop('call', var.get(u"this"), var.get('entity'), var.get('name'))
-            PyJs__initNamed_6_._set_name('_initNamed')
-            var.get('Generated').get('prototype').put('_initNamed', PyJs__initNamed_6_)
-            return var.get('Generated').create(var.get(u"this"))
-        PyJs_createNamed_5_._set_name('createNamed')
-        var.get('Entity').get('prototype').put('_createNamed', PyJs_createNamed_5_)
-        @Js
-        def PyJs__getDecoder_7_(enc, this, arguments, var=var):
-            var = Scope({'enc':enc, 'this':this, 'arguments':arguments, '_getDecoder':PyJs__getDecoder_7_}, var)
-            var.registers(['enc'])
-            var.put('enc', (var.get('enc') or Js('der')))
-            if var.get(u"this").get('decoders').callprop('hasOwnProperty', var.get('enc')).neg():
-                var.get(u"this").get('decoders').put(var.get('enc'), var.get(u"this").callprop('_createNamed', var.get('decoders').get(var.get('enc'))))
-            return var.get(u"this").get('decoders').get(var.get('enc'))
-        PyJs__getDecoder_7_._set_name('_getDecoder')
-        var.get('Entity').get('prototype').put('_getDecoder', PyJs__getDecoder_7_)
-        @Js
-        def PyJs_decode_8_(data, enc, options, this, arguments, var=var):
-            var = Scope({'data':data, 'enc':enc, 'options':options, 'this':this, 'arguments':arguments, 'decode':PyJs_decode_8_}, var)
-            var.registers(['options', 'data', 'enc'])
-            return var.get(u"this").callprop('_getDecoder', var.get('enc')).callprop('decode', var.get('data'), var.get('options'))
-        PyJs_decode_8_._set_name('decode')
-        var.get('Entity').get('prototype').put('decode', PyJs_decode_8_)
-        @Js
-        def PyJs__getEncoder_9_(enc, this, arguments, var=var):
-            var = Scope({'enc':enc, 'this':this, 'arguments':arguments, '_getEncoder':PyJs__getEncoder_9_}, var)
-            var.registers(['enc'])
-            var.put('enc', (var.get('enc') or Js('der')))
-            if var.get(u"this").get('encoders').callprop('hasOwnProperty', var.get('enc')).neg():
-                var.get(u"this").get('encoders').put(var.get('enc'), var.get(u"this").callprop('_createNamed', var.get('encoders').get(var.get('enc'))))
-            return var.get(u"this").get('encoders').get(var.get('enc'))
-        PyJs__getEncoder_9_._set_name('_getEncoder')
-        var.get('Entity').get('prototype').put('_getEncoder', PyJs__getEncoder_9_)
-        @Js
-        def PyJs_encode_10_(data, enc, reporter, this, arguments, var=var):
-            var = Scope({'data':data, 'enc':enc, 'reporter':reporter, 'this':this, 'arguments':arguments, 'encode':PyJs_encode_10_}, var)
-            var.registers(['data', 'reporter', 'enc'])
-            return var.get(u"this").callprop('_getEncoder', var.get('enc')).callprop('encode', var.get('data'), var.get('reporter'))
-        PyJs_encode_10_._set_name('encode')
-        var.get('Entity').get('prototype').put('encode', PyJs_encode_10_)
     PyJs_anonymous_3_._set_name('anonymous')
     @Js
     def PyJs_anonymous_11_(require, module, exports, this, arguments, var=var):
         var = Scope({'require':require, 'module':module, 'exports':exports, 'this':this, 'arguments':arguments}, var)
         var.registers(['exports', 'Reporter', 'Buffer', 'require', 'module', 'EncoderBuffer', 'DecoderBuffer', 'inherits'])
-        @Js
-        def PyJsHoisted_DecoderBuffer_(base, options, this, arguments, var=var):
-            var = Scope({'base':base, 'options':options, 'this':this, 'arguments':arguments}, var)
-            var.registers(['options', 'base'])
-            var.get('Reporter').callprop('call', var.get(u"this"), var.get('options'))
-            if var.get('Buffer').callprop('isBuffer', var.get('base')).neg():
-                var.get(u"this").callprop('error', Js('Input not Buffer'))
-                return var.get('undefined')
-            var.get(u"this").put('base', var.get('base'))
-            var.get(u"this").put('offset', Js(0.0))
-            var.get(u"this").put('length', var.get('base').get('length'))
-        PyJsHoisted_DecoderBuffer_.func_name = 'DecoderBuffer'
-        var.put('DecoderBuffer', PyJsHoisted_DecoderBuffer_)
-        @Js
-        def PyJsHoisted_EncoderBuffer_(value, reporter, this, arguments, var=var):
-            var = Scope({'value':value, 'reporter':reporter, 'this':this, 'arguments':arguments}, var)
-            var.registers(['value', 'reporter'])
-            if var.get('Array').callprop('isArray', var.get('value')):
-                var.get(u"this").put('length', Js(0.0))
-                @Js
-                def PyJs_anonymous_21_(item, this, arguments, var=var):
-                    var = Scope({'item':item, 'this':this, 'arguments':arguments}, var)
-                    var.registers(['item'])
-                    if var.get('EncoderBuffer').callprop('isEncoderBuffer', var.get('item')).neg():
-                        var.put('item', var.get('EncoderBuffer').create(var.get('item'), var.get('reporter')))
-                    var.get(u"this").put('length', var.get('item').get('length'), '+')
-                    return var.get('item')
-                PyJs_anonymous_21_._set_name('anonymous')
-                var.get(u"this").put('value', var.get('value').callprop('map', PyJs_anonymous_21_, var.get(u"this")))
-            else:
-                if _seq(var.get('value',throw=False).typeof(),Js('number')):
-                    if ((Js(0.0)<=var.get('value')) and (var.get('value')<=Js(255))).neg():
-                        return var.get('reporter').callprop('error', Js('non-byte EncoderBuffer value'))
-                    var.get(u"this").put('value', var.get('value'))
-                    var.get(u"this").put('length', Js(1.0))
-                else:
-                    if _seq(var.get('value',throw=False).typeof(),Js('string')):
-                        var.get(u"this").put('value', var.get('value'))
-                        var.get(u"this").put('length', var.get('Buffer').callprop('byteLength', var.get('value')))
-                    else:
-                        if var.get('Buffer').callprop('isBuffer', var.get('value')):
-                            var.get(u"this").put('value', var.get('value'))
-                            var.get(u"this").put('length', var.get('value').get('length'))
-                        else:
-                            return var.get('reporter').callprop('error', (Js('Unsupported type: ')+(Js('undefined') if _seq(var.get('value',throw=False).typeof(),Js('undefined')) else var.get('_typeof')(var.get('value')))))
-        PyJsHoisted_EncoderBuffer_.func_name = 'EncoderBuffer'
-        var.put('EncoderBuffer', PyJsHoisted_EncoderBuffer_)
         Js('use strict')
         var.put('inherits', var.get('require')(Js('inherits')))
         var.put('Reporter', var.get('require')(Js('../base/reporter')).get('Reporter'))

@@ -104,10 +104,9 @@ def filter_animes(
 @retry(
     reraise=True,
     before_sleep=before_sleep_log(logger, logging.ERROR),
-    retry=retry_if_exception_type(httpx.ReadTimeout)
-    | retry_if_exception_type(httpcore.RemoteProtocolError)
-    | retry_if_exception_type(httpcore.ConnectTimeout)
-    | retry_if_exception_type(httpx.ConnectTimeout),
+    retry=retry_if_exception_type(httpcore.TimeoutException)
+    | retry_if_exception_type(httpx.NetworkError)
+    | retry_if_exception_type(httpx.TransportError),
     wait=wait_fixed(2) + wait_random(1, 10),
 )
 def download_source(source: AnimeSource, filepath: Path):
