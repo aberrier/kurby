@@ -3,12 +3,12 @@
 
 
 <div align="center">
-    <img src="docs/res/kurby.png" alt="Kirby ball in Kirby: Canvas Curse" height=400/>
+    <img src="docs/kurby.png" alt="Kirby ball in Kirby: Canvas Curse" height=400, width=400/>
 </div>
 <br>
 
 
-Kurby is a nice and simple CLI that use [Twist](https://twist.moe) website and their huge collection to download animes for free and **automatically**
+Kurby is a nice and simple CLI that use [Twist](https://twist.moe) website, and their huge collection to download animes for free and **automatically**
 
 Animes from Twist are generally in High Definition with English subtitles. Please consider [donating](https://twist.moe) for their amazing work :)
 
@@ -17,21 +17,25 @@ The CLI is built with [Typer](https://github.com/tiangolo/typer) and it is compo
 
 - `animes`: Search animes to find what is available and extract the slug to be used in the other commands
 
-![animes](docs/res/animes.gif)
+![animes](docs/examples/animes.gif)
   
 > `--search` option allows you to make a fuzzy search
   
 - `details`: Show details of an anime if needed
 
-![details](docs/res/details.gif)
+![details](docs/examples/details.gif)
   
 > You can see the number of episodes available and when the first and last episode were uploaded
   
 - `download`: Choose and download which episodes of the anime you want !
 
-![download](docs/res/download.gif)
+![download](docs/examples/download.gif)
 
 > Because sometimes bad things can happen, Kurby will automatically retry for you
+
+You can also download without having a slug initially. In this case, Kurby will propose you a selection
+
+![download-selection](docs/examples/download-selection.gif)
 
 #### And that's it !
 

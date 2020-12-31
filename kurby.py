@@ -14,6 +14,7 @@ from main.helpers import (
     get_sources,
     download_source,
     filter_animes,
+    select_anime_slug,
 )
 from main.messages import (
     invalid_slug_message,
@@ -68,9 +69,9 @@ def display_anime_details(slug: str = typer.Argument(..., help=ANIME_SLUG_HELP))
 
 @app.command()
 def download(
-    slug: str = typer.Argument(..., help=ANIME_SLUG_HELP),
-    directory: str = typer.Argument(
-        ROOT_DIR, help="Directory where files will be uploaded"
+    slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
+    directory: str = typer.Option(
+        ROOT_DIR, "--d", help="Directory where files will be uploaded"
     ),
     nfrom: int = typer.Option(
         None, "--nfrom", help="Select episodes greater or equal to the given number"
@@ -110,7 +111,7 @@ def download(
         )
     if nto:
         filtered_source_ids -= set(
-            source.id for source in sources if source.number > nfrom
+            source.id for source in sources if source.number > nto
         )
 
     if dto:

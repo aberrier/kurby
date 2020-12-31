@@ -1,11 +1,14 @@
 import logging
 import warnings
+from functools import partial
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Union
 from urllib.parse import urljoin
 
 import httpcore
 import httpx
+import typer
+from PyInquirer import prompt
 from pydantic.tools import parse_obj_as
 from tenacity import (
     retry,
@@ -17,10 +20,10 @@ from tenacity import (
 from tqdm import tqdm
 
 from main.client import client, get_auth_client
+from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
 from main.constants import TWIST_URL, ANIME_ENDPOINT, FILES_URL, ONGOING_FILES_URL
 from main.decrypt import decrypt
 from main.schemas import Anime, AnimeDetails, AnimeSource
-from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
 
 warnings.simplefilter("ignore")
 from fuzzywuzzy import fuzz
@@ -133,3 +136,34 @@ def download_source(source: AnimeSource, filepath: Path):
                             response.num_bytes_downloaded - num_bytes_downloaded
                         )
                         num_bytes_downloaded = response.num_bytes_downloaded
+
+
+def select_anime_slug(slug: Optional[str]) -> str:
+    def get_choices(context: Dict[str, str]) -> List[Dict[str, Union[str, Anime]]]:
+        animes = get_animes()
+        if context.get("filter"):
+            animes = filter_animes(context["filter"], animes=animes)
+        return [
+            {"name": anime.full_title(), "value": anime}
+            for anime in sorted((a for a in animes), key=lambda a: a.title)
+        ]
+
+    if slug is None:
+        questions = [
+            {
+                "type": "input",
+                "name": "filter",
+                "message": "Apply a filter (Press [ENTER] to ignore):",
+            },
+            {
+                "type": "list",
+                "name": "anime",
+                "message": "Select an anime:",
+                "choices": get_choices,
+            },
+        ]
+        answers = prompt(questions)
+        if "anime" not in answers:
+            raise typer.BadParameter(f"No choice selected.")
+        return answers["anime"].slug.slug
+    return slug

@@ -18,6 +18,8 @@ tqdm = "4.55.0"
 tenacity = "6.3.1"
 arrow = "0.17.0"
 pycryptodomex = "3.9.9"
+PyInquirer = "1.0.3"
+
 [tool.poetry.dev-dependencies]
 IPython="*"
 jedi = "0.17.2"
