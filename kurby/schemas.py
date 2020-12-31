@@ -1,6 +1,7 @@
 import datetime
 from typing import Optional, List
 
+import typer
 from pydantic import BaseModel
 
 
@@ -24,6 +25,12 @@ class Anime(BaseModel):
     hidden: bool
     mal_id: Optional[int]
     slug: AnimeSlug
+
+    def full_title(self, stylized=False) -> str:
+        alt_title = f"{f' ({self.alt_title})' if self.alt_title else ''}"
+        if stylized:
+            return typer.style(f"{self.title}", bold=True) + alt_title
+        return f"{self.title}{alt_title}"
 
 
 class AnimeEpisode(BaseModel):

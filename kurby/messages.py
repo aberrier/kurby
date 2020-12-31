@@ -3,8 +3,8 @@ from typing import Optional, List
 
 import typer
 
-from main.helpers import filter_animes, get_anime_details
-from main.schemas import Anime, AnimeDetails, AnimeSource
+from kurby.helpers import filter_animes
+from kurby.schemas import Anime, AnimeDetails, AnimeSource
 
 
 def invalid_slug_message(slug: str, animes: Optional[List[Anime]] = None):
@@ -25,10 +25,9 @@ def invalid_slug_message(slug: str, animes: Optional[List[Anime]] = None):
 
 def anime_message(anime: Anime):
     return (
-        typer.style(f"{anime.title}", bold=True)
-        + f"{f' ({anime.alt_title})' if anime.alt_title else ''}"
+        anime.full_title(stylized=True)
         + (f"\n\tSeason: {anime.season}" if anime.season else "")
-        + (typer.style(" - Ongoing", blink=True) if anime.season else "")
+        + (typer.style(" - Ongoing", fg=typer.colors.YELLOW) if anime.season else "")
         + "\n\tSlug: "
         + typer.style(anime.slug.slug, fg=typer.colors.GREEN)
         + "\n"

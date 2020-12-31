@@ -1,12 +1,12 @@
 import logging
 import warnings
 from pathlib import Path
-from typing import List, Optional
-from urllib.parse import urljoin
+from typing import List, Optional, Dict, Union
 
 import httpcore
 import httpx
-from pydantic.tools import parse_obj_as
+import typer
+from PyInquirer import prompt
 from tenacity import (
     retry,
     before_sleep_log,
@@ -16,53 +16,15 @@ from tenacity import (
 )
 from tqdm import tqdm
 
-from main.client import client, get_auth_client
-from main.constants import TWIST_URL, ANIME_ENDPOINT, FILES_URL, ONGOING_FILES_URL
-from main.schemas import Anime, AnimeDetails, AnimeSource
-from main.utils import decrypt
-from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
+from kurby.api import get_auth_client, get_animes
+from kurby.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
+from kurby.constants import TWIST_URL
+from kurby.schemas import Anime, AnimeSource
 
 warnings.simplefilter("ignore")
 from fuzzywuzzy import fuzz
 
 logger = logging.getLogger(__name__)
-
-
-def get_animes() -> List[Anime]:
-    with client:
-        r = client.get(url=f"{TWIST_URL}{ANIME_ENDPOINT}")
-        r.raise_for_status()
-        return parse_obj_as(List[Anime], r.json())
-
-
-def get_anime_slugs() -> List[str]:
-    return [anime.slug.slug for anime in get_animes()]
-
-
-def get_anime_details(anime: Anime) -> AnimeDetails:
-    with client:
-        url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}"
-        r = client.get(url=url)
-        r.raise_for_status()
-        anime_details: AnimeDetails = AnimeDetails.parse_obj(r.json())
-        return anime_details
-
-
-def get_sources(anime: Anime) -> List[AnimeSource]:
-    anime_details = get_anime_details(anime)
-    with client:
-        source_key = client.source_key
-        url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}/sources"
-        r = client.get(url=url)
-        r.raise_for_status()
-        sources: List[AnimeSource] = parse_obj_as(List[AnimeSource], r.json())
-        # Decrypt and complete source
-        domain = ONGOING_FILES_URL if anime_details.ongoing else FILES_URL
-        for source in sources:
-            source.source = urljoin(
-                domain, decrypt(source.source, source_key).replace(" ", "%20")
-            )
-        return sources
 
 
 def filter_animes(
@@ -130,3 +92,34 @@ def download_source(source: AnimeSource, filepath: Path):
                             response.num_bytes_downloaded - num_bytes_downloaded
                         )
                         num_bytes_downloaded = response.num_bytes_downloaded
+
+
+def select_anime_slug(slug: Optional[str]) -> str:
+    def get_choices(context: Dict[str, str]) -> List[Dict[str, Union[str, Anime]]]:
+        animes = get_animes()
+        if context.get("filter"):
+            animes = filter_animes(context["filter"], animes=animes)
+        return [
+            {"name": anime.full_title(), "value": anime}
+            for anime in sorted((a for a in animes), key=lambda a: a.title)
+        ]
+
+    if slug is None:
+        questions = [
+            {
+                "type": "input",
+                "name": "filter",
+                "message": "Apply a filter (Press [ENTER] to ignore):",
+            },
+            {
+                "type": "list",
+                "name": "anime",
+                "message": "Select an anime:",
+                "choices": get_choices,
+            },
+        ]
+        answers = prompt(questions)
+        if "anime" not in answers:
+            raise typer.BadParameter(f"No choice selected.")
+        return answers["anime"].slug.slug
+    return slug

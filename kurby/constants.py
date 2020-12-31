@@ -9,6 +9,7 @@ ANIME_ENDPOINT = "/api/anime"
 ONGOING_FILES_URL = "https://hot-paw-03.cdn.bunny.sh"
 FILES_URL = "https://edge-6.cdn.bunny.sh"
 
+DEFAULT_ACCEPT_LANGUAGE_HEADER = "en-US,en;q=0.9"
 CHROME_HEADERS = {
     "authority": "twist.moe",
     "pragma": "no-cache",
@@ -22,7 +23,6 @@ CHROME_HEADERS = {
     "sec-fetch-mode": "navigate",
     "sec-fetch-user": "?1",
     "sec-fetch-dest": "document",
-    "accept-language": "fr-FR,fr;q=0.9",
 }
 # CLI
 ANIME_SLUG_HELP = (
@@ -32,6 +32,6 @@ ANIME_SLUG_HELP = (
 )
 
 # MISC
-ROOT_DIR = os.path.dirname(Path(__file__).parent)
+ROOT_DIR = Path(os.getcwd())
 FUZZY_SEARCH_THRESHOLD = 60
 FUZZY_SEARCH_MAX_RESULTS = 10

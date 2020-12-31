@@ -7,32 +7,37 @@ from typing import Optional
 import typer
 from faker import Faker
 
-from main.constants import ANIME_SLUG_HELP, ROOT_DIR
-from main.helpers import (
-    get_animes,
-    get_anime_details,
-    get_sources,
+from kurby.constants import ANIME_SLUG_HELP, ROOT_DIR
+from kurby.helpers import (
     download_source,
     filter_animes,
+    select_anime_slug,
 )
-from main.messages import (
+from kurby.api import get_animes, get_anime_details, get_sources
+from kurby.messages import (
     invalid_slug_message,
     anime_message,
     anime_details_message,
     download_starting_message,
 )
-from main.utils import slugify
+from kurby.utils import slugify
 
 app = typer.Typer(
     help="""
-A nice CLI to download animes from twist.moe
-The developer or this application do not store any animes whatsoever
-If you want to contribute to the list of animes please consider donating to twist.moe
+    A nice CLI to download animes from twist.moe
+    
+    The developer or this application do not store any animes whatsoever
+    
+    If you want to contribute to the list of animes please consider donating to twist.moe
 """
 )
 fake = Faker()
 
 payload = {}
+
+
+def start():
+    app()
 
 
 @app.command(name="animes")
@@ -53,7 +58,9 @@ def display_animes(
 
 
 @app.command(name="details")
-def display_anime_details(slug: str = typer.Argument(..., help=ANIME_SLUG_HELP)):
+def display_anime_details(
+    slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
+):
     """
     Give more details on a specific anime like the number of episodes from a given anime slug
     """
@@ -68,9 +75,9 @@ def display_anime_details(slug: str = typer.Argument(..., help=ANIME_SLUG_HELP))
 
 @app.command()
 def download(
-    slug: str = typer.Argument(..., help=ANIME_SLUG_HELP),
-    directory: str = typer.Argument(
-        ROOT_DIR, help="Directory where files will be uploaded"
+    slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
+    directory: str = typer.Option(
+        ROOT_DIR, "--d", help="Directory where files will be uploaded"
     ),
     nfrom: int = typer.Option(
         None, "--nfrom", help="Select episodes greater or equal to the given number"
@@ -110,7 +117,7 @@ def download(
         )
     if nto:
         filtered_source_ids -= set(
-            source.id for source in sources if source.number > nfrom
+            source.id for source in sources if source.number > nto
         )
 
     if dto:
@@ -142,4 +149,4 @@ def download(
 
 
 if __name__ == "__main__":
-    app()
+    start()
