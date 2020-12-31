@@ -32,6 +32,6 @@ ANIME_SLUG_HELP = (
 )
 
 # MISC
-ROOT_DIR = os.path.dirname(Path(__file__).parent)
+ROOT_DIR = Path(os.getcwd())
 FUZZY_SEARCH_THRESHOLD = 60
 FUZZY_SEARCH_MAX_RESULTS = 10

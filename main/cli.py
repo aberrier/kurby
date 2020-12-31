@@ -9,13 +9,11 @@ from faker import Faker
 
 from main.constants import ANIME_SLUG_HELP, ROOT_DIR
 from main.helpers import (
-    get_animes,
-    get_anime_details,
-    get_sources,
     download_source,
     filter_animes,
     select_anime_slug,
 )
+from main.api import get_animes, get_anime_details, get_sources
 from main.messages import (
     invalid_slug_message,
     anime_message,
@@ -36,6 +34,10 @@ fake = Faker()
 payload = {}
 
 
+def start():
+    app()
+
+
 @app.command(name="animes")
 def display_animes(
     search: Optional[str] = typer.Option(None, help="Filter results with fuzzy search")
@@ -54,7 +56,9 @@ def display_animes(
 
 
 @app.command(name="details")
-def display_anime_details(slug: str = typer.Argument(..., help=ANIME_SLUG_HELP)):
+def display_anime_details(
+    slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
+):
     """
     Give more details on a specific anime like the number of episodes from a given anime slug
     """
@@ -143,4 +147,4 @@ def download(
 
 
 if __name__ == "__main__":
-    app()
+    start()

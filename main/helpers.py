@@ -1,15 +1,12 @@
 import logging
 import warnings
-from functools import partial
 from pathlib import Path
 from typing import List, Optional, Dict, Union
-from urllib.parse import urljoin
 
 import httpcore
 import httpx
 import typer
 from PyInquirer import prompt
-from pydantic.tools import parse_obj_as
 from tenacity import (
     retry,
     before_sleep_log,
@@ -19,56 +16,15 @@ from tenacity import (
 )
 from tqdm import tqdm
 
-from main.client import client, get_auth_client
+from main.api import get_auth_client, get_animes
 from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
-from main.constants import TWIST_URL, ANIME_ENDPOINT, FILES_URL, ONGOING_FILES_URL
-from main.decrypt import decrypt
-from main.schemas import Anime, AnimeDetails, AnimeSource
+from main.constants import TWIST_URL
+from main.schemas import Anime, AnimeSource
 
 warnings.simplefilter("ignore")
 from fuzzywuzzy import fuzz
 
 logger = logging.getLogger(__name__)
-
-
-def get_animes() -> List[Anime]:
-    with client:
-        r = client.get(url=f"{TWIST_URL}{ANIME_ENDPOINT}")
-        r.raise_for_status()
-        return parse_obj_as(List[Anime], r.json())
-
-
-def get_anime_slugs() -> List[str]:
-    return [anime.slug.slug for anime in get_animes()]
-
-
-def get_anime_details(anime: Anime) -> AnimeDetails:
-    with client:
-        url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}"
-        r = client.get(url=url)
-        r.raise_for_status()
-        anime_details: AnimeDetails = AnimeDetails.parse_obj(r.json())
-        return anime_details
-
-
-def get_sources(anime: Anime) -> List[AnimeSource]:
-    anime_details = get_anime_details(anime)
-    with client:
-        source_key = client.source_key
-        url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}/sources"
-        r = client.get(url=url)
-        r.raise_for_status()
-        sources: List[AnimeSource] = parse_obj_as(List[AnimeSource], r.json())
-        # Decrypt and complete source
-        domain = ONGOING_FILES_URL if anime_details.ongoing else FILES_URL
-        for source in sources:
-            source.source = urljoin(
-                domain,
-                decrypt(source.source.encode("utf-8"), source_key.encode("utf-8"))
-                .decode("utf-8")
-                .replace(" ", "%20"),
-            )
-        return sources
 
 
 def filter_animes(

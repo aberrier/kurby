@@ -30,7 +30,7 @@ class Anime(BaseModel):
         alt_title = f"{f' ({self.alt_title})' if self.alt_title else ''}"
         if stylized:
             return typer.style(f"{self.title}", bold=True) + alt_title
-        return f"{self.title} {alt_title}"
+        return f"{self.title}{alt_title}"
 
 
 class AnimeEpisode(BaseModel):
