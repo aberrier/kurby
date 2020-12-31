@@ -106,7 +106,8 @@ def filter_animes(
     before_sleep=before_sleep_log(logger, logging.ERROR),
     retry=retry_if_exception_type(httpcore.TimeoutException)
     | retry_if_exception_type(httpx.NetworkError)
-    | retry_if_exception_type(httpx.TransportError),
+    | retry_if_exception_type(httpx.TransportError)
+    | retry_if_exception_type(httpx.HTTPStatusError),
     wait=wait_fixed(2) + wait_random(1, 10),
 )
 def download_source(source: AnimeSource, filepath: Path):
@@ -116,6 +117,7 @@ def download_source(source: AnimeSource, filepath: Path):
             source.source,
             headers={**dict(new_client.headers), "referer": TWIST_URL},
         ) as response:
+            response.raise_for_status()
             total = int(response.headers.get("Content-Length"))
             with filepath.open("wb") as file:
                 with tqdm(
