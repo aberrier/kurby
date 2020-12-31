@@ -43,12 +43,6 @@ def slugify(value, allow_unicode=False):
     )
 
 
-def decrypt(message: str, key: str) -> str:
-    from main.cryptojs import lib as cryptojs
-
-    return cryptojs.AES.decrypt(message, key).toString(cryptojs.enc.Utf8)
-
-
 def get_accept_language_header() -> str:
     try:
         local_settings, *_ = locale.getlocale()

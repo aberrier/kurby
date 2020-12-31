@@ -18,8 +18,8 @@ from tqdm import tqdm
 
 from main.client import client, get_auth_client
 from main.constants import TWIST_URL, ANIME_ENDPOINT, FILES_URL, ONGOING_FILES_URL
+from main.decrypt import decrypt
 from main.schemas import Anime, AnimeDetails, AnimeSource
-from main.utils import decrypt
 from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
 
 warnings.simplefilter("ignore")
@@ -60,7 +60,10 @@ def get_sources(anime: Anime) -> List[AnimeSource]:
         domain = ONGOING_FILES_URL if anime_details.ongoing else FILES_URL
         for source in sources:
             source.source = urljoin(
-                domain, decrypt(source.source, source_key).replace(" ", "%20")
+                domain,
+                decrypt(source.source.encode("utf-8"), source_key.encode("utf-8"))
+                .decode("utf-8")
+                .replace(" ", "%20"),
             )
         return sources
 
