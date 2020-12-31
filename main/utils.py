@@ -3,8 +3,15 @@ import re
 import tempfile
 import unicodedata
 import webbrowser
+import locale
+from typing import Dict
 
 import httpx
+from faker import Faker
+
+from main.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS
+
+fake = Faker()
 
 
 def open_in_browser(response: httpx.Response):
@@ -36,7 +43,24 @@ def slugify(value, allow_unicode=False):
     )
 
 
-def decrypt(message, key):
+def decrypt(message: str, key: str) -> str:
     from main.cryptojs import lib as cryptojs
 
     return cryptojs.AES.decrypt(message, key).toString(cryptojs.enc.Utf8)
+
+
+def get_accept_language_header() -> str:
+    try:
+        local_settings, *_ = locale.getlocale()
+        language_code, country_code = local_settings.split("_")
+        return f"{language_code}-{country_code},{language_code};q=0.9"
+    except:
+        return DEFAULT_ACCEPT_LANGUAGE_HEADER
+
+
+def get_chrome_headers() -> Dict[str, str]:
+    return {
+        **CHROME_HEADERS,
+        "accept-language": get_accept_language_header(),
+        "user-agent": fake.chrome(),
+    }

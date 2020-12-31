@@ -1,16 +1,18 @@
 import re
 from urllib.parse import urljoin
-from faker import Faker
+
 import httpx
 import js2py
+from faker import Faker
 
-from main.constants import TWIST_URL, CHROME_HEADERS
+from main.constants import TWIST_URL
+from main.utils import get_chrome_headers
 
 fake = Faker()
 
 
 def get_auth_client() -> httpx.Client:
-    headers = {**CHROME_HEADERS, "user-agent": fake.chrome()}
+    headers = get_chrome_headers()
     r = httpx.get(url=TWIST_URL, headers=headers)
     r.raise_for_status()
     match = re.search(r"<script>(.*)<\/script>", r.content.decode("utf-8"))
