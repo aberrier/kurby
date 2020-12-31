@@ -7,26 +7,28 @@ from typing import Optional
 import typer
 from faker import Faker
 
-from main.constants import ANIME_SLUG_HELP, ROOT_DIR
-from main.helpers import (
+from kurby.constants import ANIME_SLUG_HELP, ROOT_DIR
+from kurby.helpers import (
     download_source,
     filter_animes,
     select_anime_slug,
 )
-from main.api import get_animes, get_anime_details, get_sources
-from main.messages import (
+from kurby.api import get_animes, get_anime_details, get_sources
+from kurby.messages import (
     invalid_slug_message,
     anime_message,
     anime_details_message,
     download_starting_message,
 )
-from main.utils import slugify
+from kurby.utils import slugify
 
 app = typer.Typer(
     help="""
-A nice CLI to download animes from twist.moe
-The developer or this application do not store any animes whatsoever
-If you want to contribute to the list of animes please consider donating to twist.moe
+    A nice CLI to download animes from twist.moe
+    
+    The developer or this application do not store any animes whatsoever
+    
+    If you want to contribute to the list of animes please consider donating to twist.moe
 """
 )
 fake = Faker()

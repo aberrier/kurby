@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from main.cli import app
+from kurby.cli import app
 
 
 def start():

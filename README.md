@@ -39,14 +39,28 @@ You can also download without having a slug initially. In this case, Kurby will 
 
 #### And that's it !
 
-You can also use `python kurby.py --help` to get more information on the different commands
-## Preinstallation
+You can also use `kurby --help` to get more information on the different commands
 
 ## Installation
 ```bash
 pip install kurby
 kurby --help
 ```
+
+## Installation on Windows
+- Right click on the `install.bat` and run it as an **Administrator**, this will install [Chocolatey](https://chocolatey.org/) who will manage the python installation
+- Once the installation is finished, and you're asked to press a key, open a new terminal (`Win + R` > `cmd` )
+- You can now start using Kurby with `kurby --help`
+
+## Installation on Android without root needed
+- Install [Termux](https://play.google.com/store/apps/details?id=com.termux) on your Android phone
+- In Termux, run this command to allow access to storage: `termux-setup-storage`, and tap allow
+- Next, run the follow command `pkg install git python`
+- Then `pip3 install kurby`
+- You're done ! You can download animes on your phone like so `kurby download --d ~/storage/shared`
+
+##### *Thanks to [6b86b3ac03c167320d93](https://www.reddit.com/user/6b86b3ac03c167320d93/) for this tutorial*
+
 ## Installation from sources
 ### Create your virtual environment (optional)
 ````bash
@@ -60,6 +74,7 @@ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poet
 ### Install dependencies using poetry
 ```bash
 poetry install --no-dev
+kurby-cli --help # or python kurby-cli --help
 ```
 
 ## Getting the latest episode automatically

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kurby"
-version = "0.0.1"
+version = "0.0.2"
 description = "A modern CLI to download animes automatically from Twist.moe"
 license = "BSD-2-Clause"
 authors = ["Alain BERRIER <alain.berrier@outlook.com>"]
@@ -25,11 +25,11 @@ classifiers = [
     "Typing :: Typed"
 ]
 packages = [
-    { include = "main"},
+    { include = "kurby"},
 ]
 
 [tool.poetry.scripts]
-kurby = 'main.cli:start'
+kurby = 'kurby.cli:start'
 
 [tool.poetry.dependencies]
 python = "^3.7"

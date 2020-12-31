@@ -16,10 +16,10 @@ from tenacity import (
 )
 from tqdm import tqdm
 
-from main.api import get_auth_client, get_animes
-from main.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
-from main.constants import TWIST_URL
-from main.schemas import Anime, AnimeSource
+from kurby.api import get_auth_client, get_animes
+from kurby.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
+from kurby.constants import TWIST_URL
+from kurby.schemas import Anime, AnimeSource
 
 warnings.simplefilter("ignore")
 from fuzzywuzzy import fuzz

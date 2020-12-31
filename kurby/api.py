@@ -7,10 +7,10 @@ import js2py
 from faker import Faker
 from pydantic import parse_obj_as
 
-from main.constants import TWIST_URL, ANIME_ENDPOINT, ONGOING_FILES_URL, FILES_URL
-from main.decrypt import decrypt
-from main.schemas import Anime, AnimeDetails, AnimeSource
-from main.utils import get_chrome_headers
+from kurby.constants import TWIST_URL, ANIME_ENDPOINT, ONGOING_FILES_URL, FILES_URL
+from kurby.decrypt import decrypt
+from kurby.schemas import Anime, AnimeDetails, AnimeSource
+from kurby.utils import get_chrome_headers
 
 fake = Faker()
 

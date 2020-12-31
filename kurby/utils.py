@@ -9,7 +9,7 @@ from typing import Dict
 import httpx
 from faker import Faker
 
-from main.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS
+from kurby.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS
 
 fake = Faker()
 
