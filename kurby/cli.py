@@ -40,6 +40,15 @@ def start():
     app()
 
 
+@app.callback()
+def main():
+    typer.echo(
+        "If you are using Kurby, please consider donating to "
+        + typer.style("https://twist.moe/", fg=typer.colors.BLUE, bold=True)
+        + " and supporting the project on Github !\n"
+    )
+
+
 @app.command(name="animes")
 def display_animes(
     search: Optional[str] = typer.Option(None, help="Filter results with fuzzy search")

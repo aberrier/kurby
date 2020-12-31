@@ -1,6 +1,5 @@
 # Kurby
-[![PyPI - Python Version](https://img.shields.io/badge/python-3.7-blue.svg)](https://docs.python.org/3/whatsnew/3.7.html)
-
+[![PyPI - Python Version](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9-blue)](https://docs.python.org/3/whatsnew/3.7.html) [![Downloads](https://pepy.tech/badge/kurby)](https://pepy.tech/badge/kurby) [![PyPI version](https://badge.fury.io/py/kurby.svg)](https://badge.fury.io/py/kurby.svg)
 
 <div align="center">
     <img src="docs/kurby.png" alt="Kirby ball in Kirby: Canvas Curse" height=400, width=400/>
