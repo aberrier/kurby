@@ -2,6 +2,7 @@ import logging
 import warnings
 from pathlib import Path
 from typing import List, Optional, Dict, Union
+from urllib.parse import urljoin
 
 import httpcore
 import httpx
@@ -17,7 +18,11 @@ from tenacity import (
 from tqdm import tqdm
 
 from kurby.api import get_auth_client, get_animes
-from kurby.constants import FUZZY_SEARCH_THRESHOLD, FUZZY_SEARCH_MAX_RESULTS
+from kurby.constants import (
+    FUZZY_SEARCH_THRESHOLD,
+    FUZZY_SEARCH_MAX_RESULTS,
+    TWIST_CDN_URL,
+)
 from kurby.constants import TWIST_URL
 from kurby.schemas import Anime, AnimeSource
 
@@ -74,9 +79,10 @@ def filter_animes(
 )
 def download_source(source: AnimeSource, filepath: Path):
     with get_auth_client() as new_client:
+        url = urljoin(TWIST_CDN_URL, source.source)
         with new_client.stream(
             "GET",
-            source.source,
+            url,
             headers={**dict(new_client.headers), "referer": TWIST_URL},
         ) as response:
             response.raise_for_status()

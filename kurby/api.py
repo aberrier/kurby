@@ -7,7 +7,7 @@ import js2py
 from faker import Faker
 from pydantic import parse_obj_as
 
-from kurby.constants import TWIST_URL, ANIME_ENDPOINT, ONGOING_FILES_URL, FILES_URL
+from kurby.constants import TWIST_URL, ANIME_ENDPOINT
 from kurby.decrypt import decrypt
 from kurby.schemas import Anime, AnimeDetails, AnimeSource
 from kurby.utils import get_chrome_headers
@@ -74,7 +74,6 @@ def get_anime_details(anime: Anime) -> AnimeDetails:
 
 
 def get_sources(anime: Anime) -> List[AnimeSource]:
-    anime_details = get_anime_details(anime)
     with client:
         source_key = client.source_key
         url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}/sources"
@@ -82,12 +81,10 @@ def get_sources(anime: Anime) -> List[AnimeSource]:
         r.raise_for_status()
         sources: List[AnimeSource] = parse_obj_as(List[AnimeSource], r.json())
         # Decrypt and complete source
-        domain = ONGOING_FILES_URL if anime_details.ongoing else FILES_URL
         for source in sources:
-            source.source = urljoin(
-                domain,
+            source.source = (
                 decrypt(source.source.encode("utf-8"), source_key.encode("utf-8"))
                 .decode("utf-8")
-                .replace(" ", "%20"),
+                .replace(" ", "%20")
             )
         return sources

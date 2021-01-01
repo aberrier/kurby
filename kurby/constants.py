@@ -5,9 +5,9 @@ from pathlib import Path
 import typer
 
 TWIST_URL = "https://twist.moe"
+TWIST_CDN_URL = "https://twistcdn.bunny.sh"
 ANIME_ENDPOINT = "/api/anime"
-ONGOING_FILES_URL = "https://hot-paw-03.cdn.bunny.sh"
-FILES_URL = "https://edge-6.cdn.bunny.sh"
+
 
 DEFAULT_ACCEPT_LANGUAGE_HEADER = "en-US,en;q=0.9"
 CHROME_HEADERS = {
