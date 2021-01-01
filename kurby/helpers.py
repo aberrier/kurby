@@ -85,6 +85,13 @@ def download_source(source: AnimeSource, filepath: Path):
             url,
             headers={**dict(new_client.headers), "referer": TWIST_URL},
         ) as response:
+            if response.status_code == 404:
+                typer.secho(
+                    f"Couldn't find the episode ({url}). Skipping...",
+                    fg=typer.colors.RED,
+                    bold=True,
+                )
+                return
             response.raise_for_status()
             total = int(response.headers.get("Content-Length"))
             with filepath.open("wb") as file:
