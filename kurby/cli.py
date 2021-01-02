@@ -149,7 +149,7 @@ def download(
         title_slug = slugify(anime.title)
         current_dir = directory / title_slug
         if not current_dir.exists():
-            current_dir.mkdir()
+            current_dir.mkdir(parents=True, exist_ok=True)
         ext = source.source.rsplit(".", 1)[-1]
         filepath = (
             current_dir / f"{title_slug}-S{anime.season:02d}-E{source.number:03d}.{ext}"
