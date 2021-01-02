@@ -12,6 +12,7 @@ from kurby.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS
 
 fake = Faker()
 
+
 def open_in_browser(response: httpx.Response):
     content = response.content
 

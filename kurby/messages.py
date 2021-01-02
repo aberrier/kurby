@@ -41,6 +41,7 @@ def anime_details_message(anime_details: AnimeDetails):
         + f"{f' ({anime_details.alt_title})' if anime_details.alt_title else ''}"
         + (f"\n\tSeason: {anime_details.season}" if anime_details.season else "")
         + (typer.style(" - Ongoing", blink=True) if anime_details.season else "")
+        + f"\n{anime_details.description or ''}\n"
     )
     if sorted_episodes:
         message += (

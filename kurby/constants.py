@@ -30,6 +30,11 @@ ANIME_SLUG_HELP = (
     + typer.style("animes", bold=True)
     + " command for more information."
 )
+TWIST_SUPPORTING_MESSAGE = (
+    "If you are using Kurby, please consider donating to "
+    + typer.style("https://twist.moe/", fg=typer.colors.BLUE, bold=True)
+    + " and supporting the project on Github !\n"
+)
 
 # MISC
 ROOT_DIR = Path(os.getcwd())

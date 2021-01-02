@@ -7,7 +7,7 @@ from typing import Optional
 import typer
 from faker import Faker
 
-from kurby.constants import ANIME_SLUG_HELP, ROOT_DIR
+from kurby.constants import ANIME_SLUG_HELP, ROOT_DIR, TWIST_SUPPORTING_MESSAGE
 from kurby.helpers import (
     download_source,
     filter_animes,
@@ -42,11 +42,7 @@ def start():
 
 @app.callback()
 def main():
-    typer.echo(
-        "If you are using Kurby, please consider donating to "
-        + typer.style("https://twist.moe/", fg=typer.colors.BLUE, bold=True)
-        + " and supporting the project on Github !\n"
-    )
+    typer.echo(TWIST_SUPPORTING_MESSAGE)
 
 
 @app.command(name="animes")

@@ -1,0 +1,40 @@
+image: python:3.9-slim
+stages:
+  - test
+  - external
+variables:
+  POETRY_VIRTUALENVS_CREATE: 0
+
+test:
+  stage: test
+  before_script:
+    - apt-get update && apt-get install -y build-essential git curl
+    - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+    - ln -sf /root/.poetry/bin/poetry /usr/local/bin/poetry
+    - install_cmd="poetry install --no-root"
+    - if [ -n "$POETRY_EXTRAS" ]; then install_cmd="$install_cmd --extras \"$POETRY_EXTRAS\""; fi
+    - echo $install_cmd
+    - eval $install_cmd
+  script:
+    - pytest --cov-report=xml --cov-report=term
+  cache:
+    paths:
+      - ~/.cache/pypoetry/
+
+external:
+  stage: external
+  before_script:
+    - apt-get update && apt-get install -y build-essential git curl
+    - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+    - ln -sf /root/.poetry/bin/poetry /usr/local/bin/poetry
+    - install_cmd="poetry install --no-root"
+    - if [ -n "$POETRY_EXTRAS" ]; then install_cmd="$install_cmd --extras \"$POETRY_EXTRAS\""; fi
+    - echo $install_cmd
+    - eval $install_cmd
+  script:
+    - pytest -vvv -m external
+  cache:
+    paths:
+      - ~/.cache/pypoetry/
+  only:
+    - schedules
