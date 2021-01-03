@@ -20,6 +20,8 @@ test:
   cache:
     paths:
       - ~/.cache/pypoetry/
+  except:
+    - schedules
 
 external:
   stage: external

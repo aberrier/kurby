@@ -11,7 +11,7 @@ class TestCLI:
     @patch("kurby.cli.get_animes")
     def test_display_animes(self, mock_animes, runner, animes):
         mock_animes.return_value = animes
-        result = runner.invoke(app, ["animes"], color=True)
+        result = runner.invoke(app, ["--no-check-updates", "animes"], color=True)
         assert result.exit_code == 0
         assert TWIST_SUPPORTING_MESSAGE in result.stdout
         for anime in animes:
@@ -29,7 +29,9 @@ class TestCLI:
         attack_on_titan_animes,
     ):
         mock_animes.return_value = animes
-        result = runner.invoke(app, ["animes", "--search", "naruto"], color=True)
+        result = runner.invoke(
+            app, ["--no-check-updates", "animes", "--search", "naruto"], color=True
+        )
         assert result.exit_code == 0
         assert TWIST_SUPPORTING_MESSAGE in result.stdout
         for anime in naruto_animes:
@@ -44,7 +46,9 @@ class TestCLI:
     ):
         mock_animes.return_value = animes
         mock_anime_details.return_value = anime_details
-        result = runner.invoke(app, ["details", animes[0].slug.slug], color=True)
+        result = runner.invoke(
+            app, ["--no-check-updates", "details", animes[0].slug.slug], color=True
+        )
         assert result.exit_code == 0
         assert TWIST_SUPPORTING_MESSAGE in result.stdout
         assert anime_details_message(anime_details) in result.stdout
@@ -57,7 +61,9 @@ class TestCLI:
     ):
         mock_animes.return_value = animes
         mock_anime_details.return_value = anime_details
-        result = runner.invoke(app, ["details", "i can't exist"], color=True)
+        result = runner.invoke(
+            app, ["--no-check-updates", "details", "i can't exist"], color=True
+        )
         assert result.exit_code == 2
         assert "anime doesn't exist." in result.stdout
 
@@ -78,7 +84,9 @@ class TestCLI:
         mock_sources.return_value = anime_sources
         with tempfile.TemporaryDirectory() as directory:
             result = runner.invoke(
-                app, ["download", "naruto", "--d", directory], color=True
+                app,
+                ["--no-check-updates", "download", "naruto", "--d", directory],
+                color=True,
             )
             assert result.exit_code == 0
             assert mock_animes.call_count == 1
@@ -110,7 +118,15 @@ class TestCLI:
         with tempfile.TemporaryDirectory() as directory:
             result = runner.invoke(
                 app,
-                ["download", "naruto", "--d", directory, "--nfrom", "10"],
+                [
+                    "--no-check-updates",
+                    "download",
+                    "naruto",
+                    "--d",
+                    directory,
+                    "--nfrom",
+                    "10",
+                ],
                 color=True,
             )
             assert result.exit_code == 0
@@ -140,7 +156,15 @@ class TestCLI:
         with tempfile.TemporaryDirectory() as directory:
             result = runner.invoke(
                 app,
-                ["download", "naruto", "--d", directory, "--nto", "10"],
+                [
+                    "--no-check-updates",
+                    "download",
+                    "naruto",
+                    "--d",
+                    directory,
+                    "--nto",
+                    "10",
+                ],
                 color=True,
             )
             assert result.exit_code == 0
@@ -171,6 +195,7 @@ class TestCLI:
             result = runner.invoke(
                 app,
                 [
+                    "--no-check-updates",
                     "download",
                     "naruto",
                     "--d",
@@ -209,7 +234,15 @@ class TestCLI:
         with tempfile.TemporaryDirectory() as directory:
             result = runner.invoke(
                 app,
-                ["download", "naruto", "--d", directory, "--dfrom", "2020-01-10"],
+                [
+                    "--no-check-updates",
+                    "download",
+                    "naruto",
+                    "--d",
+                    directory,
+                    "--dfrom",
+                    "2020-01-10",
+                ],
                 color=True,
             )
             assert result.exit_code == 0
@@ -241,7 +274,15 @@ class TestCLI:
         with tempfile.TemporaryDirectory() as directory:
             result = runner.invoke(
                 app,
-                ["download", "naruto", "--d", directory, "--dto", "2020-01-10"],
+                [
+                    "--no-check-updates",
+                    "download",
+                    "naruto",
+                    "--d",
+                    directory,
+                    "--dto",
+                    "2020-01-10",
+                ],
                 color=True,
             )
             assert result.exit_code == 0

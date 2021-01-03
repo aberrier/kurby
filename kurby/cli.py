@@ -7,7 +7,15 @@ from typing import Optional
 import typer
 from faker import Faker
 
-from kurby.constants import ANIME_SLUG_HELP, ROOT_DIR, TWIST_SUPPORTING_MESSAGE
+from kurby.constants import (
+    ANIME_SLUG_HELP,
+    CWD_DIR,
+    TWIST_SUPPORTING_MESSAGE,
+    ANIMES_COMMAND_NAME,
+    DETAILS_COMMAND_NAME,
+    DOWNLOAD_COMMAND_NAME,
+    UPDATE_COMMAND_NAME,
+)
 from kurby.helpers import (
     download_source,
     filter_animes,
@@ -20,7 +28,7 @@ from kurby.messages import (
     anime_details_message,
     download_starting_message,
 )
-from kurby.utils import slugify
+from kurby.utils import slugify, check_for_update, get_current_version, install_package
 
 app = typer.Typer(
     help="""
@@ -41,11 +49,24 @@ def start():
 
 
 @app.callback()
-def main():
+def main(check_updates: bool = typer.Option(True, help="Check for Kurby updates")):
     typer.echo(TWIST_SUPPORTING_MESSAGE)
+    if check_updates:
+        current_version = get_current_version()
+        version = check_for_update(current_version=current_version)
+        if version:
+            typer.echo(
+                "You are using Kurby "
+                + typer.style(current_version, bold=True, fg=typer.colors.RED)
+                + " while version "
+                + typer.style(version, bold=True, fg=typer.colors.GREEN)
+                + " is available.\nUse "
+                + typer.style(UPDATE_COMMAND_NAME, bold=True)
+                + " command to update to the latest version !\n"
+            )
 
 
-@app.command(name="animes")
+@app.command(name=ANIMES_COMMAND_NAME)
 def display_animes(
     search: Optional[str] = typer.Option(None, help="Filter results with fuzzy search")
 ):
@@ -62,7 +83,7 @@ def display_animes(
         typer.echo(anime_message(anime))
 
 
-@app.command(name="details")
+@app.command(name=DETAILS_COMMAND_NAME)
 def display_anime_details(
     slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
 ):
@@ -78,11 +99,11 @@ def display_anime_details(
     typer.echo(anime_details_message(get_anime_details(anime)))
 
 
-@app.command()
+@app.command(name=DOWNLOAD_COMMAND_NAME)
 def download(
     slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
     directory: str = typer.Option(
-        ROOT_DIR, "--d", help="Directory where files will be uploaded"
+        CWD_DIR, "--d", help="Directory where files will be uploaded"
     ),
     nfrom: int = typer.Option(
         None, "--nfrom", help="Select episodes greater or equal to the given number"
@@ -151,6 +172,21 @@ def download(
             current_dir / f"{title_slug}-S{anime.season:02d}-E{source.number:03d}.{ext}"
         )
         download_source(source, filepath)
+
+
+@app.command(name=UPDATE_COMMAND_NAME)
+def update():
+    """
+    Update Kurby to the latest version
+    """
+    try:
+        install_package()
+    except Exception:
+        typer.secho(
+            "The installation of Kurby failed. Please reinstall it manually.",
+            fg=typer.colors.RED,
+        )
+        raise
 
 
 if __name__ == "__main__":

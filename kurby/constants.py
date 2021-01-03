@@ -25,9 +25,14 @@ CHROME_HEADERS = {
     "sec-fetch-dest": "document",
 }
 # CLI
+ANIMES_COMMAND_NAME = "animes"
+DETAILS_COMMAND_NAME = "details"
+DOWNLOAD_COMMAND_NAME = "download"
+UPDATE_COMMAND_NAME = "update"
+
 ANIME_SLUG_HELP = (
     "Anime slug. Use "
-    + typer.style("animes", bold=True)
+    + typer.style(ANIMES_COMMAND_NAME, bold=True)
     + " command for more information."
 )
 TWIST_SUPPORTING_MESSAGE = (
@@ -37,6 +42,8 @@ TWIST_SUPPORTING_MESSAGE = (
 )
 
 # MISC
-ROOT_DIR = Path(os.getcwd())
+PACKAGE_NAME = "kurby"
+CWD_DIR = Path(os.getcwd())
+ROOT_DIR = os.path.dirname(Path(__file__).parent)
 FUZZY_SEARCH_THRESHOLD = 60
 FUZZY_SEARCH_MAX_RESULTS = 10

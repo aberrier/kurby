@@ -1,14 +1,17 @@
 import os
 import re
+import subprocess
+import sys
 import tempfile
 import unicodedata
 import webbrowser
-from typing import Dict
+import pkg_resources
+from typing import Dict, Optional
 
 import httpx
 from faker import Faker
 
-from kurby.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS
+from kurby.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS, PACKAGE_NAME
 
 fake = Faker()
 
@@ -58,3 +61,34 @@ def get_chrome_headers() -> Dict[str, str]:
         "accept-language": get_accept_language_header(),
         "user-agent": fake.chrome(),
     }
+
+
+def get_current_version(package=PACKAGE_NAME) -> str:
+    return pkg_resources.get_distribution(package).version
+
+
+def check_for_update(current_version, package=PACKAGE_NAME) -> Optional[str]:
+    try:
+        r = httpx.get(f"https://pypi.org/pypi/{package}/json", timeout=1)
+    except httpx.HTTPError:
+        return
+    releases = list(
+        sorted(
+            (
+                {
+                    "raw": k,
+                    "version": tuple(int(x) for x in k.split("v", 1)[-1].split(".")),
+                    "current": bool(k == current_version),
+                }
+                for k in r.json()["releases"]
+            ),
+            key=lambda r: r["version"],
+            reverse=True,
+        )
+    )
+    if releases and not releases[0]["current"]:
+        return releases[0]["raw"]
+
+
+def install_package(package=PACKAGE_NAME):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
