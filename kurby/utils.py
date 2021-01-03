@@ -44,7 +44,7 @@ def slugify(value, allow_unicode=False):
 
 
 def get_accept_language_header() -> str:
-    # TODO: this is not reliable on all countries
+    # TODO: this is not reliable on all countries : test
     # try:
     #     local_settings, *_ = locale.getlocale()
     #     language_code, country_code = local_settings.split("_")
