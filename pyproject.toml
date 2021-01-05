@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kurby"
-version = "0.0.6"
+version = "0.1.0"
 description = "A modern CLI to download animes automatically from Twist.moe"
 license = "BSD-2-Clause"
 authors = ["Alain BERRIER <alain.berrier@outlook.com>"]
@@ -58,7 +58,6 @@ pytest-sugar = "^0"
 pytest-socket = "^0"
 
 [tool.pytest.ini_options]
-minversion = "6.0"
 addopts = [
     "--no-cov",
     "--black",
@@ -69,3 +68,9 @@ addopts = [
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.semantic_release]
+branch = "master"
+version_variable = "pyproject.toml:version"
+version_source = "commit"
+hvcs = "gitlab"
