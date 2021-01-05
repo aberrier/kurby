@@ -1,6 +1,7 @@
 import random
 from urllib.parse import urljoin
 
+import httpx
 import pytest
 from httpx import HTTPStatusError
 
@@ -45,18 +46,20 @@ class TestAPI:
                 source = random.choice(current_sources)
                 url = urljoin(TWIST_CDN_URL, source.source)
                 client = get_auth_client()
-                r = client.get(
-                    url,
-                    headers={
-                        **dict(client.headers),
-                        "referer": TWIST_URL,
-                        "range": "bytes=0-10",
-                    },
-                )
-                if r.is_error:
+                try:
+                    r = client.get(
+                        url,
+                        headers={
+                            **dict(client.headers),
+                            "referer": TWIST_URL,
+                            "range": "bytes=0-10",
+                        },
+                    )
+                    r.raise_for_status()
+                except httpx.HTTPError as e:
                     print(
                         f"Error on iteration n°{iterations} for {random_anime.full_title()}\n\tepisode={source.number}"
-                        f"{r.status_code}: {r.reason_phrase} for url: {r.url}\n"
+                        f"{e}\n"
                     )
                     continue
                 print(
