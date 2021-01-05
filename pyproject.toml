@@ -58,7 +58,6 @@ pytest-sugar = "^0"
 pytest-socket = "^0"
 
 [tool.pytest.ini_options]
-minversion = "6.0"
 addopts = [
     "--no-cov",
     "--black",
@@ -69,3 +68,9 @@ addopts = [
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.semantic_release]
+branch = "master"
+version_variable = "pyproject.toml:version"
+version_source = "commit"
+hvcs = "gitlab"
