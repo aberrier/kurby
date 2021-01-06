@@ -90,5 +90,7 @@ def check_for_update(current_version, package=PACKAGE_NAME) -> Optional[str]:
         return releases[0]["raw"]
 
 
-def install_package(package=PACKAGE_NAME):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+def install_package(version, package=PACKAGE_NAME):
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", f"{package}=={version}"]
+    )
