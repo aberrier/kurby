@@ -180,7 +180,12 @@ def update():
     Update Kurby to the latest version
     """
     try:
-        install_package()
+        current_version = get_current_version()
+        version = check_for_update(current_version=current_version)
+        if version:
+            install_package(version)
+        else:
+            typer.echo("You are using the latest version !")
     except Exception:
         typer.secho(
             "The installation of Kurby failed. Please reinstall it manually.",
