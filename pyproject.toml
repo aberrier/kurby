@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kurby"
-version = "0.2.1"
+version = "0.3.0"
 description = "A modern CLI to download animes automatically from Twist.moe"
 license = "BSD-2-Clause"
 authors = ["Alain BERRIER <alain.berrier@outlook.com>"]
