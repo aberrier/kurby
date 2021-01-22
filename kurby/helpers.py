@@ -1,5 +1,6 @@
 import logging
 import warnings
+from http import HTTPStatus
 from pathlib import Path
 from typing import List, Optional, Dict, Union
 from urllib.parse import urljoin
@@ -24,6 +25,7 @@ from kurby.constants import (
     TWIST_CDN_URL,
 )
 from kurby.constants import TWIST_URL
+from kurby.exceptions import MissingEpisodeError
 from kurby.schemas import Anime, AnimeSource
 
 warnings.simplefilter("ignore")
@@ -85,13 +87,8 @@ def download_source(source: AnimeSource, filepath: Path):
             url,
             headers={**dict(new_client.headers), "referer": TWIST_URL},
         ) as response:
-            if response.status_code == 404:
-                typer.secho(
-                    f"Couldn't find the episode ({url}). Skipping...",
-                    fg=typer.colors.RED,
-                    bold=True,
-                )
-                return
+            if response.status_code == HTTPStatus.NOT_FOUND:
+                raise MissingEpisodeError(response=response)
             response.raise_for_status()
             total = int(response.headers.get("Content-Length"))
             with filepath.open("wb") as file:

@@ -5,10 +5,10 @@ import sys
 import tempfile
 import unicodedata
 import webbrowser
-import pkg_resources
 from typing import Dict, Optional
 
 import httpx
+import pkg_resources
 from faker import Faker
 
 from kurby.constants import DEFAULT_ACCEPT_LANGUAGE_HEADER, CHROME_HEADERS, PACKAGE_NAME

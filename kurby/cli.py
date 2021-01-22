@@ -1,21 +1,24 @@
 #!/usr/bin/env python
 
 import datetime
+from distutils.util import strtobool
+import inspect
+import os
+from functools import wraps
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Callable
 
 import typer
-from faker import Faker
 
 from kurby.constants import (
     ANIME_SLUG_HELP,
     CWD_DIR,
-    TWIST_SUPPORTING_MESSAGE,
     ANIMES_COMMAND_NAME,
     DETAILS_COMMAND_NAME,
     DOWNLOAD_COMMAND_NAME,
     UPDATE_COMMAND_NAME,
 )
+from kurby.exceptions import KurbyError, MissingEpisodeError
 from kurby.helpers import (
     download_source,
     filter_animes,
@@ -35,13 +38,32 @@ app = typer.Typer(
     A nice CLI to download animes from twist.moe
     
     The developer or this application do not store any animes whatsoever
-    
-    If you want to contribute to the list of animes please consider donating to twist.moe
 """
 )
-fake = Faker()
 
 payload = {}
+DEBUG = bool(strtobool(os.getenv("KURBY_DEBUG", default="0")))
+
+
+def cli_exception_handler(func: Callable) -> Callable:
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except KurbyError as e:
+            typer.echo(
+                "Error "
+                + typer.style(e.code, fg=typer.colors.RED, bold=True)
+                + f": {e.message}"
+            )
+            if DEBUG:
+                raise e
+            raise typer.Exit(1)
+
+    signature = inspect.signature(func)
+    setattr(wrapper, "__signature__", signature)
+
+    return wrapper
 
 
 def start():
@@ -49,8 +71,10 @@ def start():
 
 
 @app.callback()
-def main(check_updates: bool = typer.Option(True, help="Check for Kurby updates")):
-    typer.echo(TWIST_SUPPORTING_MESSAGE)
+@cli_exception_handler
+def main(
+    check_updates: bool = typer.Option(True, help="Check for Kurby updates"),
+):
     if check_updates:
         current_version = get_current_version()
         version = check_for_update(current_version=current_version)
@@ -67,6 +91,7 @@ def main(check_updates: bool = typer.Option(True, help="Check for Kurby updates"
 
 
 @app.command(name=ANIMES_COMMAND_NAME)
+@cli_exception_handler
 def display_animes(
     search: Optional[str] = typer.Option(None, help="Filter results with fuzzy search")
 ):
@@ -84,6 +109,7 @@ def display_animes(
 
 
 @app.command(name=DETAILS_COMMAND_NAME)
+@cli_exception_handler
 def display_anime_details(
     slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
 ):
@@ -100,6 +126,7 @@ def display_anime_details(
 
 
 @app.command(name=DOWNLOAD_COMMAND_NAME)
+@cli_exception_handler
 def download(
     slug: str = typer.Argument(None, help=ANIME_SLUG_HELP, callback=select_anime_slug),
     directory: str = typer.Option(
@@ -161,6 +188,7 @@ def download(
         typer.secho("No sources to download ! ", bold=True)
         raise typer.Exit(code=1)
     typer.echo(download_starting_message(sources=sources, directory=directory))
+    missing_episodes = []
     for source in sources:
         typer.echo(f"{anime.title} - S{anime.season:02d} - E{source.number:02d}")
         title_slug = slugify(anime.title)
@@ -171,7 +199,19 @@ def download(
         filepath = (
             current_dir / f"{title_slug}-S{anime.season:02d}-E{source.number:03d}.{ext}"
         )
-        download_source(source, filepath)
+        try:
+            download_source(source, filepath)
+        except MissingEpisodeError as e:
+            typer.secho(
+                f"Couldn't find the episode on Twist ({e.response.url}). Skipping...",
+                fg=typer.colors.RED,
+                bold=True,
+            )
+            missing_episodes.append(source.number)
+    if missing_episodes:
+        typer.secho(f"The following episodes were missing on Twist:\n", bold=True)
+        for ep in missing_episodes:
+            typer.echo(ep)
 
 
 @app.command(name=UPDATE_COMMAND_NAME)

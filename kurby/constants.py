@@ -35,11 +35,6 @@ ANIME_SLUG_HELP = (
     + typer.style(ANIMES_COMMAND_NAME, bold=True)
     + " command for more information."
 )
-TWIST_SUPPORTING_MESSAGE = (
-    "If you are using Kurby, please consider donating to "
-    + typer.style("https://twist.moe/", fg=typer.colors.BLUE, bold=True)
-    + " and supporting the project on Github !\n"
-)
 
 # MISC
 PACKAGE_NAME = "kurby"
@@ -47,3 +42,5 @@ CWD_DIR = Path(os.getcwd())
 ROOT_DIR = os.path.dirname(Path(__file__).parent)
 FUZZY_SEARCH_THRESHOLD = 60
 FUZZY_SEARCH_MAX_RESULTS = 10
+MAX_SOURCE_TEST_ITERATION = 32
+DEFAULT_TIMEOUT = 30.0

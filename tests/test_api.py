@@ -3,10 +3,9 @@ from urllib.parse import urljoin
 
 import httpx
 import pytest
-from httpx import HTTPStatusError
 
 from kurby.api import get_auth_client, get_animes, get_anime_details, get_sources
-from kurby.constants import TWIST_CDN_URL, TWIST_URL
+from kurby.constants import TWIST_CDN_URL, TWIST_URL, MAX_SOURCE_TEST_ITERATION
 
 
 @pytest.mark.external
@@ -38,15 +37,15 @@ class TestAPI:
     def test_check_sources_random(self):
         iterations = 0
         animes = get_animes()
-        while iterations <= 100:
+        while iterations <= MAX_SOURCE_TEST_ITERATION:
             iterations += 1
             random_anime = random.choice(animes)
             current_sources = get_sources(random_anime)
             if current_sources:
                 source = random.choice(current_sources)
                 url = urljoin(TWIST_CDN_URL, source.source)
-                client = get_auth_client()
                 try:
+                    client = get_auth_client()
                     r = client.get(
                         url,
                         headers={

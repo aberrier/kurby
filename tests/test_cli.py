@@ -3,7 +3,6 @@ import tempfile
 from unittest.mock import patch
 
 from kurby.cli import app
-from kurby.constants import TWIST_SUPPORTING_MESSAGE
 from kurby.messages import anime_message, anime_details_message
 
 
@@ -13,7 +12,6 @@ class TestCLI:
         mock_animes.return_value = animes
         result = runner.invoke(app, ["--no-check-updates", "animes"], color=True)
         assert result.exit_code == 0
-        assert TWIST_SUPPORTING_MESSAGE in result.stdout
         for anime in animes:
             assert anime_message(anime) in result.stdout
 
@@ -33,7 +31,6 @@ class TestCLI:
             app, ["--no-check-updates", "animes", "--search", "naruto"], color=True
         )
         assert result.exit_code == 0
-        assert TWIST_SUPPORTING_MESSAGE in result.stdout
         for anime in naruto_animes:
             assert anime_message(anime) in result.stdout
         for anime in one_piece_animes + one_punch_animes + attack_on_titan_animes:
@@ -50,7 +47,6 @@ class TestCLI:
             app, ["--no-check-updates", "details", animes[0].slug.slug], color=True
         )
         assert result.exit_code == 0
-        assert TWIST_SUPPORTING_MESSAGE in result.stdout
         assert anime_details_message(anime_details) in result.stdout
         assert "Toto le rigolo" in result.stdout
 
