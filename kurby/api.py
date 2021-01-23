@@ -74,11 +74,8 @@ def get_auth_client() -> TwistClient:
     return c
 
 
-client = get_auth_client()
-
-
 def get_animes() -> List[Anime]:
-    with client:
+    with get_auth_client() as client:
         try:
             r = client.get(url=f"{TWIST_URL}{ANIME_ENDPOINT}")
             r.raise_for_status()
@@ -90,7 +87,7 @@ def get_animes() -> List[Anime]:
 
 
 def get_anime_details(anime: Anime) -> AnimeDetails:
-    with client:
+    with get_auth_client() as client:
         url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}"
         try:
             r = client.get(url=url)
@@ -105,7 +102,7 @@ def get_anime_details(anime: Anime) -> AnimeDetails:
 
 
 def get_sources(anime: Anime) -> List[AnimeSource]:
-    with client:
+    with get_auth_client() as client:
         source_key = client.source_key
         url = f"{TWIST_URL}{ANIME_ENDPOINT}/{anime.slug.slug}/sources"
         try:
