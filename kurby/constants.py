@@ -5,7 +5,7 @@ from pathlib import Path
 import typer
 
 TWIST_URL = "https://twist.moe"
-TWIST_CDN_URL = "https://twistcdn.bunny.sh"
+TWIST_CDN_URL = "https://air-cdn.twist.moe"
 ANIME_ENDPOINT = "/api/anime"
 
 
