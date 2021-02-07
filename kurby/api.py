@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 
 import httpx
 import js2py
+from js2py.internals.simplex import JsException
 from pydantic import parse_obj_as
 
 from kurby.constants import TWIST_URL, ANIME_ENDPOINT, DEFAULT_TIMEOUT
@@ -29,16 +30,20 @@ def get_source_key(content: str) -> bytes:
 def get_auth_client() -> TwistClient:
     headers = get_chrome_headers()
     try:
+        cookies = {}
         r = httpx.get(url=TWIST_URL, headers=headers, timeout=DEFAULT_TIMEOUT)
         r.raise_for_status()
-        match = re.search(r"<script>(.*)<\/script>", r.content.decode("utf-8"))
-        script = match.group(1)
-        script = script.replace("=eval", "=function(a) {return a;}")
-        cookie_script = js2py.eval_js(script).replace("location.reload();", "")
-        cookie_script = cookie_script.replace("document.cookie=", "value=")
-        cookie_script += "func=function(a) {return a;};func(value);"
-        cookie = js2py.eval_js(cookie_script).split("=", 1)
-        cookies = {cookie[0]: cookie[1]}
+        try:
+            match = re.search(r"<script>(.*)<\/script>", r.content.decode("utf-8"))
+            script = match.group(1)
+            script = script.replace("=eval", "=function(a) {return a;}")
+            cookie_script = js2py.eval_js(script).replace("location.reload();", "")
+            cookie_script = cookie_script.replace("document.cookie=", "value=")
+            cookie_script += "func=function(a) {return a;};func(value);"
+            cookie = js2py.eval_js(cookie_script).split("=", 1)
+            cookies = {cookie[0]: cookie[1]}
+        except (AttributeError, JsException):
+            pass
 
         r = httpx.get(
             url=TWIST_URL, headers=headers, cookies=cookies, timeout=DEFAULT_TIMEOUT
