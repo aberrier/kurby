@@ -41,6 +41,13 @@ You can also download without having a slug initially. In this case, Kurby will 
 You can also use `kurby --help` to get more information on the different commands
 
 ## Installation
+
+Quick note that Kurby uses Python 3.9 and some stuff is broken in the newer versions. Here's a quick fix if you have anaconda installed
+```
+conda create -n kurby python=3.9,
+conda activate kurby
+```
+
 ```bash
 pip install kurby
 kurby --help
@@ -65,6 +72,11 @@ kurby --help
 ````bash
 mkvirtualenv kurby
 workon kurby
+````
+### create your virtual enviroonment with Anaconda (optional)
+````bash
+conda create -n kurby python=3.9,
+conda activate kurby
 ````
 ### Install poetry
 ```bash
